@@ -19,11 +19,11 @@ lengthY 0.41;
 cylinderX 0.2;
 cylinderY 0.2;
 radius 0.05;
-xPartOfR #calc "std::sqrt(2)/2 * $radius";
+xPartOfR #eval{ sqrt(2)/2 * $radius};
 blocks 50;
-blocks2 #calc "(int) (($lengthX-$cylinderX * 2)) / ($cylinderX * 2) * $blocks";
+blocks2 #eval{ round((($lengthX-$cylinderX * 2)) / ($cylinderX * 2) * $blocks)};
 
-thickness #calc "$lengthY / $blocks";
+thickness #eval{ $lengthY / $blocks};
 
 
 scale   1;
@@ -69,19 +69,19 @@ blocks
     hex (1 4 9 7 11 14 19 17) ($blocks $blocks 1) simpleGrading (1 0.5 1)
     hex (4 5 8 9 14 15 18 19) ($blocks $blocks 1) simpleGrading (1 0.5 1)
     hex (5 0 6 8 15 10 16 18) ($blocks $blocks 1) simpleGrading (1 0.5 1)
-    hex (1 2 3 4 11 12 13 14) ($blocks2 $blocks 1) simpleGrading (9 1 1)
+    hex (1 2 3 4 11 12 13 14) ($blocks2 $blocks 1) simpleGrading (4 1 1)
 );
 
 edges
 (
-    arc 6 7 ($cylinderX #calc "$cylinderY-$radius" 0)
-    arc 7 9 (#calc "$cylinderX+$radius" $cylinderY 0)
-    arc 9 8 ($cylinderX #calc "$cylinderY+$radius" 0)
-    arc 8 6 (#calc "$cylinderX-$radius" $cylinderY 0)
-    arc 16 17 ($cylinderX #calc "$cylinderY-$radius" $thickness)
-    arc 17 19 (#calc "$cylinderX+$radius" $cylinderY $thickness)
-    arc 19 18 ($cylinderX #calc "$cylinderY+$radius" $thickness)
-    arc 18 16 (#calc "$cylinderX-$radius" $cylinderY $thickness)
+    arc 6 7 ($cylinderX #eval{$cylinderY-$radius} 0)
+    arc 7 9 (#eval{$cylinderX+$radius} $cylinderY 0)
+    arc 9 8 ($cylinderX #eval{$cylinderY+$radius} 0)
+    arc 8 6 (#eval{$cylinderX-$radius} $cylinderY 0)
+    arc 16 17 ($cylinderX #eval{$cylinderY-$radius} $thickness)
+    arc 17 19 (#eval{$cylinderX+$radius} $cylinderY $thickness)
+    arc 19 18 ($cylinderX #eval{$cylinderY+$radius} $thickness)
+    arc 18 16 (#eval{$cylinderX-$radius} $cylinderY $thickness)
 );
 
 boundary
