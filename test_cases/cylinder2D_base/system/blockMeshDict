@@ -16,7 +16,7 @@ FoamFile
 
 lengthX 2.2;
 lengthY 0.41;
-cylinderX 0.2;
+cylinderX 0.25;
 cylinderY 0.2;
 radius 0.05;
 xPartOfR #eval{ sqrt(2)/2 * $radius};
@@ -69,7 +69,7 @@ blocks
     hex (1 4 9 7 11 14 19 17) ($blocks $blocks 1) simpleGrading (1 0.5 1)
     hex (4 5 8 9 14 15 18 19) ($blocks $blocks 1) simpleGrading (1 0.5 1)
     hex (5 0 6 8 15 10 16 18) ($blocks $blocks 1) simpleGrading (1 0.5 1)
-    hex (1 2 3 4 11 12 13 14) ($blocks2 $blocks 1) simpleGrading (4 1 1)
+    hex (1 2 3 4 11 12 13 14) ($blocks2 $blocks 1) simpleGrading (3 1 1)
 );
 
 edges
@@ -146,7 +146,7 @@ boundary
     }
     cylinder
     {
-        type symmetry;
+        type patch;
         faces
         (
             (6 7 17 16)

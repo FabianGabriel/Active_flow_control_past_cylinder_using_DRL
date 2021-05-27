@@ -8,8 +8,6 @@ touch post.foam
 
 # mesh creation
 singularityRun blockMesh
-singularityRun snappyHexMesh -overwrite
-singularityRun extrudeMesh
 
 # set inlet velocity
 cp -r 0.org 0
@@ -17,7 +15,7 @@ singularityRun setExprBoundaryFields
 
 # decompose and run case
 singularityRun decomposePar
-singularityRunParallel -np 2 renumberMesh -parallel -overwrite
-singularityRunParallel -np 2 pimpleFoam -parallel
+singularityRunParallel -np 10 renumberMesh -parallel -overwrite
+singularityRunParallel -np 10 pimpleFoam -parallel
 
 #------------------------------------------------------------------------------

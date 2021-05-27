@@ -14,3 +14,7 @@ lnInclude
 *.so
 .vscode
 *.sif
+.bash*
+.singularity
+.ssh
+slurm*
