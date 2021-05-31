@@ -18,3 +18,4 @@ lnInclude
 .singularity
 .ssh
 slurm*
+backup
