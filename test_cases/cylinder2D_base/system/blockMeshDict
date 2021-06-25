@@ -20,7 +20,7 @@ cylinderX 0.2;
 cylinderY 0.2;
 radius 0.05;
 xPartOfR #eval{ sqrt(2)/2 * $radius};
-blocks 50;
+blocks 100;
 blocks2 #eval{ round((($lengthX-$cylinderX * 2)) / ($cylinderX * 2) * $blocks)};
 
 thickness 0.01;
