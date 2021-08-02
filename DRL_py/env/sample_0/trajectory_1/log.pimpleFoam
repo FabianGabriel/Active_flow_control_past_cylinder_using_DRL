@@ -1,0 +1,47 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2012                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 79e353b8-20201222 OPENFOAM=2012
+Arch   : "LSB;label=32;scalar=64"
+Exec   : pimpleFoam
+Date   : Aug 02 2021
+Time   : 21:23:18
+Host   : node060.service
+PID    : 98218
+I/O    : uncollated
+Case   : /home/y0095063/DRL_py/env/sample_0/trajectory_1
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+
+PIMPLE: max iterations = 50
+    field "(U|p)"	: relTol 0, tolerance 0.0001
+
+Reading field p
+
+Reading field U
+
+
+
+--> FOAM FATAL IO ERROR: (openfoam-2012)
+Entry 'logStdMax' not found in dictionary "/home/y0095063/DRL_py/env/sample_0/trajectory_1/0/U.boundaryField.cylinder"
+
+
+file: /home/y0095063/DRL_py/env/sample_0/trajectory_1/0/U.boundaryField.cylinder at line 38 to 45.
+
+    From bool Foam::dictionary::readEntry(const Foam::word&, T&, Foam::keyType::option, bool) const [with T = double]
+    in file /home/user/openfoam/BuildEnv/debian-build/focal-2012.latest/scratch/src/OpenFOAM/lnInclude/dictionaryTemplates.C at line 334.
+
+FOAM exiting
+

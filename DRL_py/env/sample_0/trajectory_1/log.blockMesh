@@ -1,0 +1,99 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2012                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 79e353b8-20201222 OPENFOAM=2012
+Arch   : "LSB;label=32;scalar=64"
+Exec   : blockMesh
+Date   : Aug 02 2021
+Time   : 21:22:37
+Host   : node060.service
+PID    : 95217
+I/O    : uncollated
+Case   : /home/y0095063/DRL_py/env/sample_0/trajectory_1
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Creating block mesh from "system/blockMeshDict"
+Using #calc at line 20 in file "/home/y0095063/DRL_py/env/sample_0/trajectory_1/system/blockMeshDict"
+Using #codeStream with "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so"
+Could not load "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so"
+/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so: cannot open shared object file: No such file or directory
+Creating new library in "dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so"
+Invoking wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757
+wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757
+    ln: ./lnInclude
+    dep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so
+Using #calc at line 21 in file "/home/y0095063/DRL_py/env/sample_0/trajectory_1/system/blockMeshDict"
+Using #codeStream with "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so"
+Could not load "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so"
+/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so: cannot open shared object file: No such file or directory
+Creating new library in "dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so"
+Invoking wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6
+wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6
+    ln: ./lnInclude
+    dep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so
+Creating block edges
+No non-planar block faces defined
+Creating topology blocks
+Creating topology patches
+
+Creating block mesh topology
+
+Check topology
+
+	Basic statistics
+		Number of internal faces : 0
+		Number of boundary faces : 6
+		Number of defined boundary faces : 6
+		Number of undefined boundary faces : 0
+	Checking patch -> block consistency
+
+Creating block offsets
+Creating merge list (topological search)...
+
+Creating polyMesh from blockMesh
+Creating patches
+Creating cells
+Creating points with scale 1
+    Block 0 cell size :
+        i : 0.011 .. 0.011
+        j : 0.011081081 .. 0.011081081
+        k : 0.011 .. 0.011
+
+
+There are no merge patch pairs
+
+Writing polyMesh with 0 cellZones
+----------------
+Mesh Information
+----------------
+  boundingBox: (0 0 0) (2.2 0.41 0.011)
+  nPoints: 15276
+  nCells: 7400
+  nFaces: 29837
+  nInternalFaces: 14563
+----------------
+Patches
+----------------
+  patch 0 (start: 14563 size: 200) name: top
+  patch 1 (start: 14763 size: 200) name: bottom
+  patch 2 (start: 14963 size: 37) name: inlet
+  patch 3 (start: 15000 size: 37) name: outlet
+  patch 4 (start: 15037 size: 7400) name: back
+  patch 5 (start: 22437 size: 7400) name: front
+
+End
+
