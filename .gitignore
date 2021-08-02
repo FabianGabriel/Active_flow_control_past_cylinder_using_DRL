@@ -19,3 +19,5 @@ lnInclude
 .ssh
 slurm*
 backup
+DRL_py/env/sample*
+flow_past_cylinder_by_DRL
