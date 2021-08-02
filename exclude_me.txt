@@ -1,0 +1,16 @@
+.singularity
+.cache
+.config
+.mozilla
+.ssh
+.git
+notebooks
+.gitignore
+.README.md
+venv
+.bash_history
+.bashlogout
+.bash_profile
+.bashrc
+.local
+exclude_me.txt
