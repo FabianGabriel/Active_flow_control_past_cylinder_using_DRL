@@ -9,13 +9,16 @@
 - **read_example.py**: script demonstrating how to read *trajectory.csv* and *coefficients.dat* with Python Pandas
 
 ## Compiling the boundary condition
-
-- start a Singularity shell, source the OF environment variables, navigate to the source files, and compile
+- If you're on a cluster, the first step is to load the singularity module
+```
+module load singularity/3.6.0rc2
+```
+- Start a Singularity shell, source the OF environment variables, navigate to the source files, and compile
 ```
 # top level folder of repository
-singularity shell of2006-py1.6-cpu.sif
+singularity shell of_v2012.sif
 # now we are operating from inside the container
-source /usr/lib/openfoam/openfoam2006/etc/bashrc
+source /usr/lib/openfoam/openfoam2012/etc/bashrc
 cd DRL_py/agentRotatingWallVelocity/
 wmake
 ```
@@ -46,6 +49,8 @@ cylinder
         train           true;
         // currently ignored
         absOmegaMax     0.05;
+        // limit log of standard deviation
+        logStdMax       2.0;
     }
 ```
-The boundary condition is currently not fully implemented. E.g., **restart is not supported**. Moreover, writing the trajectory will not work properly when executing MPI parallel simulations.
+The boundary condition is currently not fully implemented. E.g., **restart is not supported**.
