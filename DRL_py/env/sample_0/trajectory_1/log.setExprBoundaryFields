@@ -8,10 +8,10 @@
 Build  : 79e353b8-20201222 OPENFOAM=2012
 Arch   : "LSB;label=32;scalar=64"
 Exec   : setExprBoundaryFields
-Date   : Aug 02 2021
-Time   : 21:23:16
-Host   : node060.service
-PID    : 97646
+Date   : Aug 09 2021
+Time   : 19:37:56
+Host   : node254.service
+PID    : 166228
 I/O    : uncollated
 Case   : /home/y0095063/DRL_py/env/sample_0/trajectory_1
 nProcs : 1

@@ -5,6 +5,7 @@
 """
 
 import pandas as pd
+import os
 
 
 def read_data_from_trajectory(traj_files, n_sensor):
@@ -42,7 +43,8 @@ def read_data_from_trajectory(traj_files, n_sensor):
     names_coeffs[3] = "c_l"
     keep = ["t", "c_d", "c_l"]
 
-    file_path = traj_files + "postProcessing/forces/0/coefficient.dat"
+    step = os.listdir(traj_files + "postProcessing/forces/")
+    file_path = traj_files + "postProcessing/forces/" + step[0] + "/coefficient.dat"
     coeffs = pd.read_csv(file_path, sep="\t", names=names_coeffs, usecols=keep, comment="#")
 
     # for some reason the function object's writeControls do not work properly; therefore,
@@ -52,7 +54,7 @@ def read_data_from_trajectory(traj_files, n_sensor):
     # setting for delayed start(unexpected behavior of StartTime)
     if abs(trajectory.t.values[0].round(5) - trajectory.t.values[0].round(2)) >= 1e-5:
         pick_every = 20
-        coeffs = coeffs[(coeffs.index - 1) % pick_every == 0]
+        coeffs = coeffs[(coeffs.index + 1) % pick_every == 0]
     else:
         pick_every = 20
         coeffs = coeffs[coeffs.index % pick_every == 0]

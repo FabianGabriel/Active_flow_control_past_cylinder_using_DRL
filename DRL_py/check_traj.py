@@ -13,6 +13,7 @@ def check_trajectories(sample):
 
     corrupted_traj = []
     completed_traj = []
+    traj_i = []
 
     for i, traj in enumerate(traj_files):
 
@@ -22,15 +23,15 @@ def check_trajectories(sample):
             x_traj = pd.read_csv(traj_files[i] + "trajectory.csv", sep=",", header=0)
             t_l = len(x_traj.t.values)
 
-            if t_l >= 500:
+            if t_l >= 199:
                 completed_traj.append(traj)
             else:
                 corrupted_traj.append(traj)
+                traj_i.append(i)
         else:
             corrupted_traj.append(traj)
-
-    """
+            traj_i.append(i)
    
-    for traj in corrupted_traj:
-        os.system(f"rm -r {traj}")
-    """
+    for i, traj in enumerate(corrupted_traj):
+        os.system(f"mkdir --parents ./failed/sample_{sample}/{traj_i[i]}/; mv {traj}/* $_ &&"
+                  f"rm -r {traj}")

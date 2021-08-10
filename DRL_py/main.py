@@ -26,22 +26,13 @@ r_4 = 0.000001
 policy_model = FCCA(n_sensor, 64)
 value_model = FCV(n_sensor, 64)
 
-# to retrain model from checkpoint
-retrain_models = False
-
-if retrain_models:
-    path = 'retain_models/'
-    policy_model = torch.jit.load(path+"policy.pt")
-    print(f"policy model model loaded from {path}")
-    value_model = value_model.load_state_dict(torch.load(path+'value.pt'))
-    print(f"value model model loaded from {path}")
 
 # no of workers
 n_worker = 10
 # no of total buffer size
 buffer_size = 10
 # range to randomly start control
-control_between = [0.1, 2]
+control_between = [4.5, 4.9]
 # env instance
 env = env(n_worker, buffer_size, control_between)
 
@@ -77,14 +68,30 @@ value_model_max_grad_norm = float('inf')
 # tolerance for trainig of value net
 value_stopping_mse = 25
 
+# to retrain model from checkpoint
+retrain_models = False
+begin_from_sample = 0
+
+if retrain_models:
+    begin_from_sample = 16
+    path = "results/models/"
+    sample_str = f"{begin_from_sample-1}"
+    policy_model = torch.jit.load(path+"policy_"+sample_str+".pt")
+    policy_model.eval()
+    print(f"policy model model loaded from {path}")
+    path = "results/value_models/"
+    value_model.load_state_dict(torch.load(path+"value_"+sample_str+".pt"))
+    print(f"value model model loaded from {path}")
+    value_model.eval()
+
 # main PPO algorithm iteration
 main_ppo_iteration = 100
 
 evaluation_score = []
 
 # iteration for PPO algorithm
-for i in range(main_ppo_iteration):
-    sample = i
+for i in range(main_ppo_iteration - begin_from_sample):
+    sample = i + begin_from_sample
     train_model(value_model,
                 policy_model,
                 env,

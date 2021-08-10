@@ -8,6 +8,7 @@ import _thread
 import os
 import queue
 import subprocess
+import time
 
 import numpy as np
 
@@ -28,14 +29,14 @@ class env:
         self.buffer_size = buffer_size
         self.control_between = control_between
 
-    def write_jobfile(self, job_name, file, job_dir):
+    def write_jobfile(self, core_count, job_name, file, job_dir):
         with open(f'{job_dir}/jobscript.sh', 'w') as rsh:
             rsh.write(f"""#!/bin/bash -l        
 #SBATCH --partition=standard
 #SBATCH --nodes=1
 #SBATCH --time=12:00:00
 #SBATCH --job-name={job_name}
-#SBATCH --ntasks-per-node=1
+#SBATCH --ntasks-per-node={core_count}
 
 module load singularity/3.6.0rc2
 module load mpi/openmpi/4.0.1/cuda_aware_gcc_6.3.0
@@ -83,26 +84,39 @@ cd {job_dir}
         Returns: execution of OpenFOAM Allrun file in machine
 
         """
+        # number of cores
+        core_count = 4
+
         # get the random start
         rand_control_traj = self.rand_n_to_contol(1)
 
         # changing of end time to keep trajectory length equal
-        endtime = round(float(rand_control_traj[0] + 5), 2)
+        endtime = round(float(rand_control_traj[0] + 1), 2)
 
         # make dir for new trajectory
         traj_path = f"./env/sample_{sample}/trajectory_{buffer_counter}"
+
         print(f"\n starting trajectory : {buffer_counter} \n")
         os.makedirs(traj_path, exist_ok=True)
 
+        zeros = '.2f'
+        time_string = f"{rand_control_traj[0]:,{zeros}}"
         # copy files form base_case
         # change starting time of control -> 0.org/U && system/controlDict
         # change of ending time -> system/controlDict
         os.popen(f'cp -r ./env/base_case/agentRotatingWallVelocity/* {traj_path}/ && '
+                 f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/0/U &&'
                  f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/0.org/U &&'
                  f'sed -i "/^endTime/ s/endTime.*/endTime         {endtime};/g" {traj_path}/system/controlDict &&'
                  f'sed -i "s/timeStart.*/timeStart       {rand_control_traj[0]};/g" {traj_path}/system/controlDict')
+        while not os.path.exists(f'{traj_path}/processor0//0.00025'):
+            time.sleep(1)
+        for i in range(core_count):
+            os.popen(f'cp -r ./env/base_case/baseline_data/Re_100/processor{i}/{time_string}025 {traj_path}/processor{i}/{time_string}025 &&'
+                 f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/processor{i}/0.00025/U &&'
+                 f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/processor{i}/{time_string}025/U')
 
-        self.write_jobfile(job_name=f'traj_{buffer_counter}', file='./Allrun', job_dir=traj_path+'/')
+        self.write_jobfile(core_count, job_name=f'traj_{buffer_counter}', file='./Allrun', job_dir=traj_path+'/')
         jobfile_path = f'{traj_path}' + '/jobscript.sh'
 
         proc[buffer_counter] = subprocess.Popen(['sh', 'submit_job.sh', jobfile_path])

@@ -84,7 +84,20 @@ Foam::agentRotatingWallVelocityFvPatchVectorField::
         const fvPatchFieldMapper &mapper)
     : fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
       origin_(ptf.origin_),
-      axis_(ptf.axis_)
+      axis_(ptf.axis_),
+      train_(ptf.train_),
+      interval_(ptf.interval_),
+      start_time_(ptf.start_time_),
+      start_iter_(ptf.start_iter_),
+      policy_name_(ptf.policy_name_),
+      policy_(ptf.policy_),
+      abs_omega_max_(ptf.abs_omega_max_),
+      log_std_max_(ptf.log_std_max_),
+      omega_(ptf.omega_),
+      omega_old_(ptf.omega_old_),
+      control_time_(ptf.control_time_),
+      theta_cumulative_(ptf.theta_cumulative_),
+      dt_theta_cumulative_(ptf.dt_theta_cumulative_)
 {
 }
 
@@ -93,7 +106,20 @@ Foam::agentRotatingWallVelocityFvPatchVectorField::
         const agentRotatingWallVelocityFvPatchVectorField &rwvpvf)
     : fixedValueFvPatchField<vector>(rwvpvf),
       origin_(rwvpvf.origin_),
-      axis_(rwvpvf.axis_)
+      axis_(rwvpvf.axis_),
+      train_(rwvpvf.train_),
+      interval_(rwvpvf.interval_),
+      start_time_(rwvpvf.start_time_),
+      start_iter_(rwvpvf.start_iter_),
+      policy_name_(rwvpvf.policy_name_),
+      policy_(rwvpvf.policy_),
+      abs_omega_max_(rwvpvf.abs_omega_max_),
+      log_std_max_(rwvpvf.log_std_max_),
+      omega_(rwvpvf.omega_),
+      omega_old_(rwvpvf.omega_old_),
+      control_time_(rwvpvf.control_time_),
+      theta_cumulative_(rwvpvf.theta_cumulative_),
+      dt_theta_cumulative_(rwvpvf.dt_theta_cumulative_)
 {
 }
 
@@ -103,7 +129,20 @@ Foam::agentRotatingWallVelocityFvPatchVectorField::
         const DimensionedField<vector, volMesh> &iF)
     : fixedValueFvPatchField<vector>(rwvpvf, iF),
       origin_(rwvpvf.origin_),
-      axis_(rwvpvf.axis_)
+      axis_(rwvpvf.axis_),
+      train_(rwvpvf.train_),
+      interval_(rwvpvf.interval_),
+      start_time_(rwvpvf.start_time_),
+      start_iter_(rwvpvf.start_iter_),
+      policy_name_(rwvpvf.policy_name_),
+      policy_(rwvpvf.policy_),
+      abs_omega_max_(rwvpvf.abs_omega_max_),
+      log_std_max_(rwvpvf.log_std_max_),
+      omega_(rwvpvf.omega_),
+      omega_old_(rwvpvf.omega_old_),
+      control_time_(rwvpvf.control_time_),
+      theta_cumulative_(rwvpvf.theta_cumulative_),
+      dt_theta_cumulative_(rwvpvf.dt_theta_cumulative_)
 {
 }
 
@@ -131,42 +170,78 @@ void Foam::agentRotatingWallVelocityFvPatchVectorField::updateCoeffs()
             Info << "Updating Omega with policy.\n";
             omega_old_ = omega_;
             control_time_ = t;
-            // creating the feature vector
+
             const fvPatchField<scalar> &p = patch().lookupPatchField<volScalarField, scalar>("p");
-            torch::Tensor features = torch::zeros({1, p.size()}, torch::kFloat64);
+            // Create lists of the variables on each processor so that they can be gathered onto the master processor later.
+            List<scalar> pList(p.size());
+
+            // Populate the above lists.
             forAll(p, i)
             {
-                features[0][i] = p[i];
+                pList[i] = p[i];
             }
-            std::vector<torch::jit::IValue> policyFeatures{features};
-            torch::Tensor gauss_parameters = policy_.forward(policyFeatures).toTensor();
-            torch::Tensor mean_tensor = gauss_parameters[0][0];
-            std::cout << "log_std: " << gauss_parameters[0][1].item<double>() << "\n";
-            torch::Tensor log_std_tensor = torch::clamp(gauss_parameters[0][1], -20.0, log_std_max_);
-            std::cout << "clipped log_std: " << log_std_tensor << "\n";
-            if (train_)
+
+            // Create lists of the lists of the above variables, with size equal to the
+            // number of processors.
+            List< List<scalar> > gatheredValues(Pstream::nProcs());
+
+            //  Populate and gather the stuff onto the master processor.
+            gatheredValues[Pstream::myProcNo()] = pList;
+            Pstream::gatherList(gatheredValues);
+
+            if (Pstream::master()) //only run on the master
             {
-                // sample from Gaussian distribution during training
-                omega_ = at::normal(mean_tensor, log_std_tensor.exp()).item<double>();
+                // creating the feature vector
+                int size = 0;
+                for (int i = 0; i < gatheredValues.size(); i++)
+                {
+                    size += gatheredValues[i].size();
+                }
+                torch::Tensor features = torch::zeros({ 1, size }, torch::kFloat64);
+                int k = 0;
+                std::vector<scalar> pvec(size);
+                for (int i = 0; i < gatheredValues.size(); i++)
+                {
+                    for (int j = 0; j < gatheredValues[i].size(); j++)
+                    {
+                        features[0][k] = gatheredValues[i][j];
+                        pvec[k] = gatheredValues[i][j];
+                        k++;
+                    }
+                }
+                std::vector<torch::jit::IValue> policyFeatures{features};
+                torch::Tensor gauss_parameters = policy_.forward(policyFeatures).toTensor();
+                torch::Tensor mean_tensor = gauss_parameters[0][0];
+                std::cout << "log_std: " << gauss_parameters[0][1].item<double>() << "\n";
+                torch::Tensor log_std_tensor = torch::clamp(gauss_parameters[0][1], -20.0, log_std_max_);
+                std::cout << "clipped log_std: " << log_std_tensor << "\n";
+                std::cout << "size: " << size << "\n";
+                if (train_)
+                {
+                    // sample from Gaussian distribution during training
+                    omega_ = at::normal(mean_tensor, log_std_tensor.exp()).item<double>();
+                }
+                else
+                {
+                    // use expected (mean) angular velocity
+                    omega_ = mean_tensor.item<double>();
+                }
+                // save trajectory
+                scalar mean = mean_tensor.item<double>();
+                scalar log_std = log_std_tensor.item<double>();
+                scalar var = (log_std_tensor + log_std_tensor).exp().item<double>();
+                scalar entropy = 0.5 + 0.5*log(2.0*M_PI) + log_std;
+                scalar log_p = -((omega_ - mean) * (omega_ - mean)) / (2.0*var) - log_std - log(sqrt(2.0*M_PI));
+                saveTrajectory(log_p, entropy, mean, log_std, pvec, size);
+                // reset cumulative values
+                theta_cumulative_ = 0.0;
+                dt_theta_cumulative_ = 0.0;
+                Info << "New omega: " << omega_ << "; old value: " << omega_old_ << "\n";
             }
-            else
-            {
-                // use expected (mean) angular velocity
-                omega_ = mean_tensor.item<double>();
-            }
+            Pstream::scatter(omega_);
+
             // avoid update of angular velocity during p-U coupling
             update_omega_ = false;
-            // save trajectory
-            scalar mean = mean_tensor.item<double>();
-            scalar log_std = log_std_tensor.item<double>();
-            scalar var = (log_std_tensor + log_std_tensor).exp().item<double>();
-            scalar entropy = 0.5 + 0.5*log(2.0*M_PI) + log_std;
-            scalar log_p = -((omega_ - mean) * (omega_ - mean)) / (2.0*var) - log_std - log(sqrt(2.0*M_PI));
-            saveTrajectory(log_p, entropy, mean, log_std);
-            // reset cumulative values
-            theta_cumulative_ = 0.0;
-            dt_theta_cumulative_ = 0.0;
-            Info << "New omega: " << omega_ << "; old value: " << omega_old_ << "\n";
         }
     }
 
@@ -184,11 +259,13 @@ void Foam::agentRotatingWallVelocityFvPatchVectorField::updateCoeffs()
     dt_theta_cumulative_ += abs(omega);
 
     // Calculate the rotating wall velocity from the specification of the motion
+
     const vectorField Up(
         (-omega) * ((patch().Cf() - origin_) ^ (axis_ / mag(axis_))));
 
     // Remove the component of Up normal to the wall
     // just in case it is not exactly circular
+
     const vectorField n(patch().nf());
     vectorField::operator=(Up - n * (n & Up));
 
@@ -200,19 +277,23 @@ void Foam::agentRotatingWallVelocityFvPatchVectorField::write(Ostream &os) const
     fvPatchVectorField::write(os);
     os.writeEntry("origin", origin_);
     os.writeEntry("axis", axis_);
-    writeEntry("value", os);
+    os.writeEntry("policy", policy_name_);
+    os.writeEntry("startTime", start_time_);
+    os.writeEntry("interval", interval_);
+    os.writeEntry("train", train_);
+    os.writeEntry("absOmegaMax", abs_omega_max_);
+    os.writeEntry("logStdMax", log_std_max_);
 }
 
-void Foam::agentRotatingWallVelocityFvPatchVectorField::saveTrajectory(scalar log_p, scalar entropy, scalar mean, scalar log_std) const
+void Foam::agentRotatingWallVelocityFvPatchVectorField::saveTrajectory(scalar log_p, scalar entropy, scalar mean, scalar log_std, std::vector<scalar> pvec, int size) const
 {
     std::ifstream file("trajectory.csv");
-    std::fstream trajectory("trajectory.csv", std::ios::app);
+    std::fstream trajectory("trajectory.csv", std::ios::app | std::ios::binary);
     const scalar t = this->db().time().timeOutputValue();
-    const fvPatchField<scalar> &p = patch().lookupPatchField<volScalarField, scalar>("p");
     if(!file.good())
     {
         // write header
-        trajectory << "t, omega, omega_mean, omega_log_std, log_prob, entropy, theta_sum, dt_theta_sum, p(" << p.size() << ")";
+        trajectory << "t, omega, omega_mean, omega_log_std, log_prob, entropy, theta_sum, dt_theta_sum, p(" << size << ")";
     }
     trajectory << std::setprecision(15)
                << "\n"
@@ -225,9 +306,9 @@ void Foam::agentRotatingWallVelocityFvPatchVectorField::saveTrajectory(scalar lo
                << theta_cumulative_ << ", "
                << dt_theta_cumulative_;
     
-    forAll(p, i)
+    for (int i = 0; i < size; i++)
     {
-            trajectory << ", " << p[i];
+        trajectory << ", " << pvec[i];
     }
 }
 
