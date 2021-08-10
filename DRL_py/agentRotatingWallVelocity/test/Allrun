@@ -8,8 +8,6 @@ touch post.foam
 
 # mesh creation
 runApplication blockMesh
-runApplication snappyHexMesh -overwrite
-runApplication extrudeMesh
 
 # set inlet velocity
 cp -r 0.org 0

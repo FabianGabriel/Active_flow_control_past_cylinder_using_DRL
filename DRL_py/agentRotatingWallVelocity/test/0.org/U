@@ -39,7 +39,7 @@ boundaryField
         origin          (0.2 0.2 0.0);
         axis            (0 0 1);
         policy          "policy.pt";
-        startTime       0.01;
+        startTime       0.61;
         interval        20;
         train           true;
         absOmegaMax     0.05;

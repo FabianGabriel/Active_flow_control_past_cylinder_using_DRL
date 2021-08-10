@@ -53,12 +53,18 @@ def fill_buffer(env, sample, n_sensor, gamma, r_1, r_2, r_3, r_4):
     n_traj = len(traj_files)
     assert n_traj > 0
 
-    # To extract the length of trajectories
+    # To extract the length of trajectory
     t_traj = pd.read_csv(traj_files[0] + "trajectory.csv", sep=",", header=0)
+    n_T = len(t_traj.t.values)
 
     # due to delayed starting behaviour the time steps set to explicit -> length of trajectory
-    # n_T = len(t_traj.t.values)
-    n_T = 500
+    # choose shortest available trajectory to ensure the same length
+    for i, files in enumerate(traj_files):
+        # To extract the length of trajectory
+        t_traj = pd.read_csv(traj_files[i] + "trajectory.csv", sep=",", header=0)
+        n_T_temp = len(t_traj.t.values)
+        if n_T_temp < n_T:
+            n_T = n_T_temp
 
     # buffer initialization
     state_buffer = np.zeros((n_traj, n_T, n_sensor))
@@ -70,6 +76,11 @@ def fill_buffer(env, sample, n_sensor, gamma, r_1, r_2, r_3, r_4):
     for i, files in enumerate(traj_files):
         # get the dataframe from the trajectories
         coeff_data, trajectory_data, p_at_faces = read_data_from_trajectory(files, n_sensor)
+
+        # sometimes off by 1 this fixes that
+        n_T_2 = len(trajectory_data.t.values)
+        if n_T_2 > n_T:
+            trajectory_data = trajectory_data[:n_T]
 
         # state values from data frame
         states = trajectory_data[p_at_faces].values

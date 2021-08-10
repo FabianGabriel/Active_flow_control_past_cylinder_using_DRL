@@ -8,10 +8,10 @@
 Build  : 79e353b8-20201222 OPENFOAM=2012
 Arch   : "LSB;label=32;scalar=64"
 Exec   : blockMesh
-Date   : Aug 02 2021
-Time   : 21:22:37
-Host   : node060.service
-PID    : 95217
+Date   : Aug 09 2021
+Time   : 19:37:54
+Host   : node254.service
+PID    : 165059
 I/O    : uncollated
 Case   : /home/y0095063/DRL_py/env/sample_0/trajectory_1
 nProcs : 1
@@ -23,28 +23,8 @@ allowSystemOperations : Allowing user-supplied system call operations
 Create time
 
 Creating block mesh from "system/blockMeshDict"
-Using #calc at line 20 in file "/home/y0095063/DRL_py/env/sample_0/trajectory_1/system/blockMeshDict"
-Using #codeStream with "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so"
-Could not load "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so"
-/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so: cannot open shared object file: No such file or directory
-Creating new library in "dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757/platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so"
-Invoking wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757
-wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757
-    ln: ./lnInclude
-    dep: codeStreamTemplate.C
-    Ctoo: codeStreamTemplate.C
-    ld: /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_8d3cfc09a7371a00f87c707b6a2096a3e7764757/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_8d3cfc09a7371a00f87c707b6a2096a3e7764757.so
-Using #calc at line 21 in file "/home/y0095063/DRL_py/env/sample_0/trajectory_1/system/blockMeshDict"
-Using #codeStream with "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so"
-Could not load "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so"
-/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so: cannot open shared object file: No such file or directory
-Creating new library in "dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6/platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so"
-Invoking wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6
-wmake libso /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6
-    ln: ./lnInclude
-    dep: codeStreamTemplate.C
-    Ctoo: codeStreamTemplate.C
-    ld: /home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/_3debb1a6977f2eb6849c8f889d5d9046e69e45b6/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_3debb1a6977f2eb6849c8f889d5d9046e69e45b6.so
+Using #codeStream at line 31 in file "/home/y0095063/DRL_py/env/sample_0/trajectory_1/system/blockMeshDict"
+Using #codeStream with "/home/y0095063/DRL_py/env/sample_0/trajectory_1/dynamicCode/platforms/linux64GccDPInt32Opt/lib/libcodeStream_83830034f6fdf359bf4b60996268ec7fea0080fd.so"
 Creating block edges
 No non-planar block faces defined
 Creating topology blocks
@@ -55,23 +35,44 @@ Creating block mesh topology
 Check topology
 
 	Basic statistics
-		Number of internal faces : 0
-		Number of boundary faces : 6
-		Number of defined boundary faces : 6
+		Number of internal faces : 5
+		Number of boundary faces : 20
+		Number of defined boundary faces : 20
 		Number of undefined boundary faces : 0
 	Checking patch -> block consistency
 
 Creating block offsets
 Creating merge list (topological search)...
+Deleting polyMesh directory "constant/polyMesh"
 
 Creating polyMesh from blockMesh
 Creating patches
 Creating cells
 Creating points with scale 1
     Block 0 cell size :
-        i : 0.011 .. 0.011
-        j : 0.011081081 .. 0.011081081
-        k : 0.011 .. 0.011
+        i : 0.004 .. 0.004
+        j : 0.0032265907 .. 0.0016132953
+        k : 0.01 .. 0.01
+
+    Block 1 cell size :
+        i : 0.0041 .. 0.0041
+        j : 0.0032265907 .. 0.0016132953
+        k : 0.01 .. 0.01
+
+    Block 2 cell size :
+        i : 0.004 .. 0.004
+        j : 0.0033260209 .. 0.0016630104
+        k : 0.01 .. 0.01
+
+    Block 3 cell size :
+        i : 0.0041 .. 0.0041
+        j : 0.0033260209 .. 0.0016630104
+        k : 0.01 .. 0.01
+
+    Block 4 cell size :
+        i : 0.0018477536 .. 0.0073910142
+        j : 0.0041 .. 0.0041
+        k : 0.01 .. 0.01
 
 
 There are no merge patch pairs
@@ -80,20 +81,21 @@ Writing polyMesh with 0 cellZones
 ----------------
 Mesh Information
 ----------------
-  boundingBox: (0 0 0) (2.2 0.41 0.011)
-  nPoints: 15276
-  nCells: 7400
-  nFaces: 29837
-  nInternalFaces: 14563
+  boundingBox: (0 0 0) (2.2 0.41 0.01)
+  nPoints: 171700
+  nCells: 85000
+  nFaces: 340850
+  nInternalFaces: 169150
 ----------------
 Patches
 ----------------
-  patch 0 (start: 14563 size: 200) name: top
-  patch 1 (start: 14763 size: 200) name: bottom
-  patch 2 (start: 14963 size: 37) name: inlet
-  patch 3 (start: 15000 size: 37) name: outlet
-  patch 4 (start: 15037 size: 7400) name: back
-  patch 5 (start: 22437 size: 7400) name: front
+  patch 0 (start: 169150 size: 550) name: top
+  patch 1 (start: 169700 size: 550) name: bottom
+  patch 2 (start: 170250 size: 100) name: inlet
+  patch 3 (start: 170350 size: 100) name: outlet
+  patch 4 (start: 170450 size: 85000) name: back
+  patch 5 (start: 255450 size: 85000) name: front
+  patch 6 (start: 340450 size: 400) name: cylinder
 
 End
 

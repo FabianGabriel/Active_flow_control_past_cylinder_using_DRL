@@ -25,9 +25,9 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         8;
+endTime         6.53;
 
-deltaT          5e-4;
+deltaT          2.5e-4;
 
 writeControl    runTime;
 
@@ -55,7 +55,7 @@ functions
         writeControl    timeStep;
         writeInterval   30;
         // start time is excepted
-         timeStart       0.01;
+         timeStart       1.53;
         log false;
 
         patches
