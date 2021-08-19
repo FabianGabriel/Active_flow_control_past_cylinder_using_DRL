@@ -47,7 +47,7 @@ def fill_buffer(env, sample, n_sensor, gamma, r_1, r_2, r_3, r_4):
     # check the trajectory to be completed
     check_trajectories(sample)
 
-    traj_files = glob(f'./env/sample_{sample}' + "/*/")
+    traj_files = glob(f'./Data/sample_{sample}' + "/*/")
 
     # To check if the trajectories is sampled
     n_traj = len(traj_files)

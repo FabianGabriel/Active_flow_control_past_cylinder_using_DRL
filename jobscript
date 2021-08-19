@@ -9,7 +9,7 @@
 #SBATCH --job-name=plate
 ## number of requested ranks/cores per node
 ## total cores = request nodes x ntasks-per-node = 1 x 4 = 4
-#SBATCH --ntasks-per-node=4
+#SBATCH --ntasks-per-node=8
 
 ## load software libraries
 module load singularity/3.6.0rc2
