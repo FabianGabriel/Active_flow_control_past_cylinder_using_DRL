@@ -23,8 +23,12 @@ def check_trajectories(sample):
             x_traj = pd.read_csv(traj_files[i] + "trajectory.csv", sep=",", header=0)
             t_l = len(x_traj.t.values)
 
-            if t_l >= 199:
+            if t_l >= 399:
                 completed_traj.append(traj)
+                step = os.listdir(f'./env/sample_{sample}/trajectory_{i}/postProcessing/forces/')
+                file_path = f"./env/sample_{sample}/trajectory_{i}/postProcessing/forces/" + step[0] + "/coefficient.dat"
+                os.system(f"mkdir --parents ./Data/sample_{sample}/trajectory_{i}/; mv ./env/sample_{sample}/trajectory_{i}/trajectory.csv $_ ;mv {file_path} $_ &&"
+                          f"rm -r {traj}")
             else:
                 corrupted_traj.append(traj)
                 traj_i.append(i)

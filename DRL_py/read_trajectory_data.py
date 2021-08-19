@@ -19,7 +19,7 @@ def read_data_from_trajectory(traj_files, n_sensor):
         traj_files: trajectory location relative to main ppo.py or env.py file
 
     Returns: Two dataframes.
-             1) from trajectory.csv :  ["t", "omega", "log_p", "entropy", "theta_sum", "dt_theta_sum"]
+             1) from trajectory.csv :  ["t", "omega", "omega_mean", "omega_log_std", "log_p", "entropy", "theta_sum", "dt_theta_sum"]
              2) from postProcessing/forces/0/coefficient.dat" : ["t", "c_d", "c_l"]
     """
 
@@ -29,7 +29,7 @@ def read_data_from_trajectory(traj_files, n_sensor):
     # read trajectory data
     # number of cell faces forming the cylinder patch
     n_faces = n_sensor
-    names = ["t", "omega", "log_p", "entropy", "theta_sum", "dt_theta_sum"]
+    names = ["t", "omega", "omega_mean", "omega_log_std", "log_p", "entropy", "theta_sum", "dt_theta_sum"]
     p_names = ["p{:d}".format(i) for i in range(n_faces)]
 
     trajectory = pd.read_csv(traj_files + "trajectory.csv", sep=",", names=names + p_names, header=0)
@@ -43,8 +43,7 @@ def read_data_from_trajectory(traj_files, n_sensor):
     names_coeffs[3] = "c_l"
     keep = ["t", "c_d", "c_l"]
 
-    step = os.listdir(traj_files + "postProcessing/forces/")
-    file_path = traj_files + "postProcessing/forces/" + step[0] + "/coefficient.dat"
+    file_path = traj_files + "coefficient.dat"
     coeffs = pd.read_csv(file_path, sep="\t", names=names_coeffs, usecols=keep, comment="#")
 
     # for some reason the function object's writeControls do not work properly; therefore,

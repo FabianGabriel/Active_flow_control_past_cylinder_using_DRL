@@ -34,7 +34,7 @@ class env:
             rsh.write(f"""#!/bin/bash -l        
 #SBATCH --partition=standard
 #SBATCH --nodes=1
-#SBATCH --time=12:00:00
+#SBATCH --time=01:00:00
 #SBATCH --job-name={job_name}
 #SBATCH --ntasks-per-node={core_count}
 
@@ -91,7 +91,7 @@ cd {job_dir}
         rand_control_traj = self.rand_n_to_contol(1)
 
         # changing of end time to keep trajectory length equal
-        endtime = round(float(rand_control_traj[0] + 1), 2)
+        endtime = round(float(rand_control_traj[0] + 2), 2)
 
         # make dir for new trajectory
         traj_path = f"./env/sample_{sample}/trajectory_{buffer_counter}"
@@ -109,9 +109,10 @@ cd {job_dir}
                  f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/0.org/U &&'
                  f'sed -i "/^endTime/ s/endTime.*/endTime         {endtime};/g" {traj_path}/system/controlDict &&'
                  f'sed -i "s/timeStart.*/timeStart       {rand_control_traj[0]};/g" {traj_path}/system/controlDict')
-        while not os.path.exists(f'{traj_path}/processor0//0.00025'):
-            time.sleep(1)
+        
         for i in range(core_count):
+            while not os.path.exists(f'{traj_path}/processor{i}//0.00025'):
+                time.sleep(1)
             os.popen(f'cp -r ./env/base_case/baseline_data/Re_100/processor{i}/{time_string}025 {traj_path}/processor{i}/{time_string}025 &&'
                  f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/processor{i}/0.00025/U &&'
                  f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/processor{i}/{time_string}025/U')
