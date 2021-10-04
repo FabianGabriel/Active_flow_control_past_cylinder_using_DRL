@@ -12,3 +12,6 @@ rm -rf slurm*
 rm -rf env/sample_*
 rm -rf __pycache__
 rm -rf py.log
+rm -rf ./env/base_case/agentRotatingWallVelocity/policy.pt
+
+cp ./agentRotatingWallVelocity/test/policy.pt ./env/base_case/agentRotatingWallVelocity/policy.pt

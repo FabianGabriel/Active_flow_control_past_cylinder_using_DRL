@@ -30,3 +30,47 @@ To run a simulation with Singularity, use the dedicated *Allrun.singularity* scr
 sbatch jobscript name_of_simulation
 ```
 To show all running jobs of a user, use `squeue -u $USER`. Another helpful command is `quota -s` to check the available disk space.
+
+## Starting a Training
+
+Choose a setup: 
+
+`cd DRL_py_beta`
+
+Start the Training:
+
+`sbatch python_job.sh`
+
+## Evaluate a specific Episode
+Inside a Setup Folder:
+
+If you choose the sample 52 for example:
+
+`cp ./env/base_case/agentRotatingWallVelocity_start_without_training ./env/run/sample_52`
+
+`cp ./results/models/policy_51.pt ./env/run/sample_52/policy.pt`
+
+Now edit the jobscript file in that newly created folder in line 11:
+
+From:
+
+`cd ./env/run/sample_*/`
+
+To:
+
+`cd ./env/run/sample_52/`
+
+Now to start the evaluation:
+
+`sbatch ./env/run/sample_52/jobscript.sh`
+
+## Resetting the Setup
+Make sure you have downloaded and saved all needed data
+
+Choose a setup:
+
+`cd DRL_py_beta`
+
+Reset:
+
+`sbatch cleanup.sh`
