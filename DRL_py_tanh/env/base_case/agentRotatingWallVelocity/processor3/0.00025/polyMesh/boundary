@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2012                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       polyBoundaryMesh;
+    arch        "LSB;label=32;scalar=64";
+    location    "0.00025/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+8
+(
+    top
+    {
+        type            patch;
+        nFaces          212;
+        startFace       42187;
+    }
+    bottom
+    {
+        type            patch;
+        nFaces          213;
+        startFace       42399;
+    }
+    inlet
+    {
+        type            patch;
+        nFaces          0;
+        startFace       42612;
+    }
+    outlet
+    {
+        type            patch;
+        nFaces          100;
+        startFace       42612;
+    }
+    back
+    {
+        type            empty;
+        inGroups        1(empty);
+        nFaces          21250;
+        startFace       42712;
+    }
+    front
+    {
+        type            empty;
+        inGroups        1(empty);
+        nFaces          21250;
+        startFace       63962;
+    }
+    cylinder
+    {
+        type            patch;
+        nFaces          0;
+        startFace       85212;
+    }
+    procBoundary3to2
+    {
+        type            processor;
+        inGroups        1(processor);
+        nFaces          101;
+        startFace       85212;
+        matchTolerance  0.0001;
+        transform       unknown;
+        myProcNo        3;
+        neighbProcNo    2;
+    }
+)
+
+// ************************************************************************* //

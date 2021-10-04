@@ -43,7 +43,9 @@ module load mpi/openmpi/4.0.1/cuda_aware_gcc_6.3.0
 
 cd {job_dir}
 
-./Allrun.singularity""")
+./Allrun.singularity
+
+touch finished.txt""")
 
         os.system(f"chmod +x {job_dir}/jobscript.sh")
 
@@ -140,7 +142,7 @@ cd {job_dir}
         proc = []
 
         # set the n_workers
-        for t in range(int(self.buffer_size)):
+        for t in range(int(max(self.buffer_size, self.n_worker))):
             item = "proc_" + str(t)
             proc.append(item)
 

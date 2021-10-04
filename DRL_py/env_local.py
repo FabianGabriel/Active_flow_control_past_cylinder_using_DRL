@@ -8,6 +8,7 @@ import _thread
 import os
 import queue
 import subprocess
+import time
 
 import numpy as np
 
@@ -16,7 +17,6 @@ class env:
     """
         This Class is to run trajectory, hence handling OpenFOAM files and executing them in machine
     """
-
     def __init__(self, n_worker, buffer_size, control_between):
         """
 
@@ -46,8 +46,8 @@ class env:
 
     def process_waiter(self, proc, job_name, que):
         """
-            This method is to wait for the executed process till it is completed
-        """
+             This method is to wait for the executed process till it is completed
+         """
         try:
             proc.wait()
         finally:
@@ -66,28 +66,42 @@ class env:
         Returns: execution of OpenFOAM Allrun file in machine
 
         """
+        # number of cores
+        core_count = 4
+
         # get the random start
         rand_control_traj = self.rand_n_to_contol(1)
 
         # changing of end time to keep trajectory length equal
-        endtime = round(float(rand_control_traj[0] + 5), 2)
+        endtime = round(float(rand_control_traj[0] + 2), 2)
 
         # make dir for new trajectory
         traj_path = f"./env/sample_{sample}/trajectory_{buffer_counter}"
+
         print(f"\n starting trajectory : {buffer_counter} \n")
         os.makedirs(traj_path, exist_ok=True)
 
+        zeros = '.2f'
+        time_string = f"{rand_control_traj[0]:,{zeros}}"
         # copy files form base_case
         # change starting time of control -> 0.org/U && system/controlDict
         # change of ending time -> system/controlDict
         os.popen(f'cp -r ./env/base_case/agentRotatingWallVelocity/* {traj_path}/ && '
+                 f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/0/U &&'
                  f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/0.org/U &&'
                  f'sed -i "/^endTime/ s/endTime.*/endTime         {endtime};/g" {traj_path}/system/controlDict &&'
                  f'sed -i "s/timeStart.*/timeStart       {rand_control_traj[0]};/g" {traj_path}/system/controlDict')
+        
+        for i in range(core_count):
+            while not os.path.exists(f'{traj_path}/processor{i}//0.00025'):
+                time.sleep(1)
+            os.popen(f'cp -r ./env/base_case/baseline_data/Re_100/processor{i}/{time_string}025 {traj_path}/processor{i}/{time_string}025 &&'
+                 f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/processor{i}/0.00025/U &&'
+                 f'sed -i "s/startTime.*/startTime       {rand_control_traj[0]};/g" {traj_path}/processor{i}/{time_string}025/U')
 
         # executing Allrun to start trajectory
         proc[buffer_counter] = subprocess.Popen(
-            ['singularity', 'run', '../of2006-py1.6-cpu.sif', './Allrun', f'{traj_path}/'])
+            [ 'cd',f'{traj_path}/','&&','./Allrun.singularity','&&','touch','finished.txt'])
         _thread.start_new_thread(self.process_waiter,
                                  (proc[buffer_counter], f"trajectory_{buffer_counter}", results))
 
@@ -107,7 +121,7 @@ class env:
         proc = []
 
         # set the n_workers
-        for t in range(int(self.buffer_size)):
+        for t in range(int(max(self.buffer_size, self.n_worker))):
             item = "proc_" + str(t)
             proc.append(item)
 
@@ -116,7 +130,7 @@ class env:
         process_count = 0
 
         # execute the n = n_workers trajectory simultaneously
-        for _ in np.arange(self.n_worker):
+        for n in np.arange(self.n_worker):
             self.run_trajectory(buffer_counter, proc, results, sample)
             process_count += 1
             # increase the counter of trajectory number
@@ -131,3 +145,12 @@ class env:
                 process_count += 1
                 buffer_counter += 1
             process_count -= 1
+
+
+if __name__ == "__main__":
+    n_worker = 2
+    buffer_size = 4
+    control_between = [0.1, 4]
+    sample = 0
+    env = env(n_worker, buffer_size, control_between)
+    env.sample_trajectories(sample)
