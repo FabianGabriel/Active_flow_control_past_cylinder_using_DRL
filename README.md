@@ -37,6 +37,11 @@ Choose a setup:
 
 `cd DRL_py_beta`
 
+Before you can start you have to download the baseline_data from here:
+[baseline_data](https://cloudstorage.tu-braunschweig.de/getlink/fiM1FGVmAfb8ACriCFRs74wM/baseline_data.zip)(400MB)
+
+Then you have to copy the content of that folder into the ./env/baseline_case/baseline_data folder
+
 Start the Training:
 
 `sbatch python_job.sh`
