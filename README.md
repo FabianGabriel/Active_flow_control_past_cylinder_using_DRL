@@ -79,3 +79,29 @@ Choose a setup:
 Reset:
 
 `sbatch cleanup.sh`
+
+## Report
+The report for this study : https://doi.org/10.5281/zenodo.5634050
+
+BibTex citation :
+
+```
+@misc{fabian_gabriel_2021_5634050,
+
+  author       = {Fabian Gabriel},
+  
+  title        = {{Aktive Regelung einer Zylinderumströmung bei 
+                   variierender Reynoldszahl durch bestärkendes
+                   Lernen}},
+                   
+  month        = oct,
+  
+  year         = 2021,
+  
+  publisher    = {Zenodo},
+  
+  doi          = {10.5281/zenodo.5634050},
+  
+  url          = {https://doi.org/10.5281/zenodo.5634050}
+}
+```
